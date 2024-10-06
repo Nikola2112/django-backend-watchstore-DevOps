@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  backend_rds:
+    build:
+      context: .
+      dockerfile: backend_rds/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend_rds.settings
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  backend_redis:
+    build:
+      context: .
+      dockerfile: backend_redis/Dockerfile
+    ports:
+      - "8001:8000"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend_redis.settings
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - frontend
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: mydb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+  frontend:
