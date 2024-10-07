@@ -9,6 +9,11 @@ services:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=backend_rds.settings
+      - DB_NAME=${DB_NAME}        # Используйте переменные окружения из .env
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
     depends_on:
       - db
     networks:
@@ -22,6 +27,8 @@ services:
       - "8001:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=backend_redis.settings
+      - REDIS_HOST=${REDIS_HOST}   # Используйте переменные окружения из .env
+      - REDIS_PORT=${REDIS_PORT}
     depends_on:
       - redis
     networks:
@@ -39,9 +46,9 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_DB: mydb
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

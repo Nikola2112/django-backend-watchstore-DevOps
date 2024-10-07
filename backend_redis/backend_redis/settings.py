@@ -3,6 +3,9 @@ from pathlib import Path
 from django.middleware.security import SecurityMiddleware
 from django.middleware.common import CommonMiddleware
 
+from dotenv import load_dotenv
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-secret-key')

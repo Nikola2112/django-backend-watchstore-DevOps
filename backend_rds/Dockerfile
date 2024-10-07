@@ -16,8 +16,11 @@ COPY backend_rds/requirements.txt /app/requirements.txt
 # 5. Встановлюємо Python залежності з requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN pip install django-cors-headers
+
+
 # 6. Копіюємо весь проект у контейнер
-COPY . /app/
+COPY backend_rds/ /app/
 
 # 7. Встановлюємо змінні середовища для Django
 ENV DJANGO_SETTINGS_MODULE=backend_rds.settings
