@@ -1,30 +1,21 @@
 # 1.  базовий образ Python 3.9
-FROM python:3.9-slim
-
-# 2.  залежності для PostgreSQL та інші потрібні пакети
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.11
 
 # 3. робоча директорію для додатку
 WORKDIR /app
 
 # 4. Копіюємо файл requirements.txt у контейнер
-COPY backend_rds/requirements.txt /app/requirements.txt
+COPY requirements.txt /app/
 
 # 5. Встановлюємо Python залежності з requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install django-cors-headers
+RUN pip install --upgrade pip
 
 
 # 6. Копіюємо весь проект у контейнер
-COPY backend_rds/ /app/
+COPY . app/
 
-# 7. Встановлюємо змінні середовища для Django
-ENV DJANGO_SETTINGS_MODULE=backend_rds.settings
-ENV PYTHONUNBUFFERED=1
 
 # 8. Відкриваємо порт 8000 для зовнішніх підключень
 EXPOSE 8000
