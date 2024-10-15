@@ -2,72 +2,25 @@ version: '3.8'
 
 services:
   backend_rds:
-    build:
-      context: ./backend_rds
-      dockerfile: Dockerfile
+    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-rds:latest
     env_file:
       - .env
     ports:
       - "8000:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend_rds.settings
-      - DB_NAME=${DB_NAME}
-      - DB_USER=${DB_USER}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-    depends_on:
-      - db
-    networks:
-      - backend
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
   backend_redis:
-    build:
-      context: ./backend_redis
-      dockerfile: Dockerfile
+    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-redis:latest
     env_file:
       - .env
     ports:
       - "8001:8000"
-    environment:
-      - DJANGO_SETTINGS_MODULE=backend_redis.settings
-      - REDIS_HOST=${REDIS_HOST}   # Используйте переменные окружения из .env
-      - REDIS_PORT=${REDIS_PORT}
-    depends_on:
-      - redis
-    networks:
-      - backend
-
-  frontend:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-    ports:
-      - "80:80"
-    networks:
-      - frontend
-
-  db:
-    image: postgres:13
-    environment:
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - backend
-
-  redis:
-    image: "redis:alpine"
-    ports:
-      - "6380:6380"
-    networks:
-      - backend
-
-volumes:
-  postgres_data:
-
-networks:
-  backend:
-  frontend:
+      - ./redis_data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
