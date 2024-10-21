@@ -1,26 +1,31 @@
 version: '3.8'
 
 services:
-  backend_rds:
-    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-rds:latest
-    env_file:
-      - .env
+  rds:
+    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-rds
+    container_name: backend_rds
+    restart: always
     ports:
       - "8000:8000"
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend_rds.settings
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}
 
-  backend_redis:
-    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-redis:latest
-    env_file:
-      - .env
+  redis:
+    image: 664418977283.dkr.ecr.us-east-1.amazonaws.com/prod-redis
+    container_name: backend_redis
+    restart: always
     ports:
-      - "8001:8000"
-    volumes:
-      - ./redis_data:/data
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
+      - "8001:8001"
+    environment:
+      - DJANGO_SETTINGS_MODULE=backend_redis.settings
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - REDIS_DB=${REDIS_DB}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS}

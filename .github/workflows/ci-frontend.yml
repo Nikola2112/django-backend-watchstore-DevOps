@@ -1,33 +1,35 @@
-name: Frontend CI
+name: Deploy Frontend
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches:
+      - main
 
 jobs:
-  build:
+  deploy-frontend:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Node.js
-        uses: actions/setup-node@v2
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          node-version: '16'
-
-      - name: Install dependencies
-        run: |
-          npm install
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_KEY }}
+          aws-region: us-east-1
 
       - name: Build frontend
         run: |
+          npm install
           npm run build
 
-      - name: Deploy frontend
+      - name: Deploy to S3
         run: |
-          echo "Deploy frontend static files"
-          # Here you could add commands to deploy to a static hosting service like AWS S3, Netlify, or GitHub Pages
+          aws s3 sync ./build s3://watch-store-frontend-bucket --delete
+
+      - name: Invalidate CloudFront cache
+        run: |
+          DISTRIBUTION_ID=$(aws cloudfront list-distributions --query "DistributionList.Items[?Origins.Items[0].DomainName=='watch-store-frontend-bucket.s3.amazonaws.com'].Id" --output text)
+          aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
