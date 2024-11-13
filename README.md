@@ -1,21 +1,31 @@
 Watch Store Architecture Project
 
 Overview
+
 This project implements a scalable, secure architecture for an online watch store, focusing on managing backend services, static frontend content, and API integration. The key components include user authentication, product listings, and order processing, with a high emphasis on performance and scalability through AWS services.
 
 Architecture
+
 The architecture is divided into the following main components:
 
 Public Subnet:
+
 EC2 instances handle API requests and serve dynamic content.
 Private Subnet:
+
 RDS (PostgreSQL) is used for storing persistent data, such as user details, product information, and order history.
 ElastiCache (Redis) is integrated to cache session data and reduce database load, improving system performance.
+
 S3 and CloudFront:
+
 Static content (frontend) is hosted on S3, and CloudFront is used to distribute this content globally with low latency and high transfer speeds.
+
 Tech Stack
+
 Backend: Django (Python) with PostgreSQL for the database.
-Cache Layer: Redis via AWS ElastiCache for session caching.
+Cache Layer: 
+
+Redis via AWS ElastiCache for session caching.
 Frontend: Static HTML/CSS served through Amazon S3 and accelerated by CloudFront.
 Infrastructure Management: Docker and Docker Compose for containerization, allowing easy deployment and scaling.
 Deployment: The backend and frontend are deployed using CI/CD pipelines via GitHub Actions, focusing on scalability using either EC2 or ECS (Elastic Container Service).
