@@ -1,4 +1,5 @@
 Watch Store Architecture Project
+
 Overview
 This project implements a scalable, secure architecture for an online watch store, focusing on managing backend services, static frontend content, and API integration. The key components include user authentication, product listings, and order processing, with a high emphasis on performance and scalability through AWS services.
 
