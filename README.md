@@ -22,13 +22,25 @@ Static content (frontend) is hosted on S3, and CloudFront is used to distribute 
 
 Tech Stack
 
-Backend: Django (Python) with PostgreSQL for the database.
+Backend: 
+
+Django (Python) with PostgreSQL for the database.
+
 Cache Layer: 
 
 Redis via AWS ElastiCache for session caching.
-Frontend: Static HTML/CSS served through Amazon S3 and accelerated by CloudFront.
-Infrastructure Management: Docker and Docker Compose for containerization, allowing easy deployment and scaling.
-Deployment: The backend and frontend are deployed using CI/CD pipelines via GitHub Actions, focusing on scalability using either EC2 or ECS (Elastic Container Service).
+
+Frontend:
+
+Static HTML/CSS served through Amazon S3 and accelerated by CloudFront.
+
+Infrastructure Management: 
+
+Docker and Docker Compose for containerization, allowing easy deployment and scaling.
+
+Deployment: 
+
+The backend and frontend are deployed using CI/CD pipelines via GitHub Actions, focusing on scalability using either EC2 or ECS (Elastic Container Service).
 Infrastructure Management with Terraform
 Terraform is used to automate and manage the infrastructure for the online store. The following AWS resources are provisioned and managed using Terraform:
 
@@ -50,7 +62,9 @@ Terraform defines VPC settings and security groups to control access between res
 Auto Scaling (EC2 or ECS):
 
 Terraform provisions auto-scaling groups for backend EC2 instances or configures ECS for containerized backend services, ensuring the application can scale with demand.
+
 Deployment
+
 Backend (EC2 or ECS):
 Dockerized Django app that manages business logic, with PostgreSQL for the database and Redis for session caching.
 Frontend (S3 + CloudFront):
@@ -61,10 +75,13 @@ Product Listings: Display available watches for sale.
 Order Management: Users can place orders, and the system processes them while storing the data in RDS.
 Caching with Redis: Utilizes Redis to speed up session handling and database queries.
 Scalable Deployment: Automated scaling and updates via CI/CD pipelines.
+
 CI/CD
+
 Separate pipelines are implemented for deploying the backend services (Django) and frontend (static content). The CI/CD pipelines ensure smooth and automated deployment through GitHub Actions, Docker, and ECS/EC2.
 
 How to Run
+
 Clone the repository.
 Set up environment variables for the backend and cache services.
 Build and run Docker containers for all services (backend, database, and cache).
